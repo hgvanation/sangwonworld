@@ -5,7 +5,7 @@
 (function(){
   if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-  const COLORS = ['#c8a24a','#e3c46f','#2a58d4','#7fa4ff'];   // vàng gold + xanh hoàng gia
+  const COLORS = ['#D71920','#A60016','#111111','#65121D'];   // đỏ – đen – burgundy
   const TRAIL_MS = 45, BURST = 9, MAX = 60;
   const rnd = (a,b) => a + Math.random()*(b-a);
 
