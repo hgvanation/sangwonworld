@@ -2,12 +2,13 @@
    Thêm trang cho phép sửa JSON: thêm vào SW.editKeys { tên-trang: [tên biến SW.xxx] }
    Gallery dùng công cụ riêng: js/admin-gallery.js */
 SW.editKeys = {
-  home:['banners','updates','fanposts','notices'], profile:['profile'], moments:['moments'],
+  home:['heroImages','banners','updates','fanposts','notices'], profile:['profile'], moments:['moments'],
   discography:['discography'], awards:['awards'],
   streaming:['streaming'], voting:['voting'], trending:['trending'], project:['projects'], schedule:['schedule'],
 };
 SW._defaults = {};
 Object.values(SW.editKeys).flat().forEach(k => SW._defaults[k] = JSON.parse(JSON.stringify(SW[k])));
+SW._defaults.nav = JSON.parse(JSON.stringify(SW.nav));   // để nút "Khôi phục mặc định" của Quản lý menu hoạt động
 
 /* Upload 1 ảnh lên Cloudinary → trả về link gốc (secure_url) */
 SW.cloudUpload = async (file) => {
@@ -20,10 +21,12 @@ SW.fab = (items) => { document.getElementById('adm-btn')?.remove(); const d=docu
   items.forEach(([t,fn,ghost])=>{ const b=document.createElement('button'); b.className='btn'+(ghost?' ghost':''); b.textContent=t; b.onclick=fn; d.appendChild(b); }); document.body.appendChild(d); };
 
 SW.mountAdmin = (page) => {
-  document.getElementById('adm-btn')?.remove();
+  document.getElementById('adm-btn')?.remove(); document.body.classList.remove('has-adm');
   if(!SW.isAdmin() || !SW.db) return;
-  if(page==='gallery') return SW.fab([['📤 Upload ảnh',()=>SW.openUpload()],['🗂 Quản lý hạng mục',()=>SW.openTree(),1]]);
-  const keys = SW.editKeys[page]; if(keys) SW.fab([['✏️ Chỉnh sửa trang này',()=>SW.openEditor(keys)]]);
+  const items = page==='gallery' ? [['📤 Upload ảnh',()=>SW.openUpload()],['🗂 Quản lý hạng mục',()=>SW.openTree(),1]]
+    : (SW.editKeys[page] ? [['✏️ Chỉnh sửa trang này',()=>SW.openEditor(SW.editKeys[page])]] : []);
+  items.push(['🧭 Quản lý menu',()=>SW.openNav(),1]);
+  SW.fab(items); document.body.classList.add('has-adm');   // has-adm: chừa chỗ ở chân trang để nút admin không che chữ
 };
 SW.openEditor = (keys) => {
   document.getElementById('adm-modal')?.remove();
