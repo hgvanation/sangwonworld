@@ -113,3 +113,11 @@ h2{line-height:1.2;padding:.18em .45em .1em}
 .banner .cap p{font-size:.85rem;line-height:1.4}
 @media(max-width:700px){.banner .cap h1{font-size:clamp(1.1rem,5.5vw,1.8rem)}}
 .has-adm footer{padding-bottom:100px}                         /* nút admin cố định góc dưới không đè lên chữ chân trang */
+
+/* ===== ẢNH NGẪU NHIÊN ĐẦU TRANG CHỦ (thay cho chữ SANGWON khổng lồ) ===== */
+.hero{position:relative;height:clamp(220px,34vw,400px);overflow:hidden;margin:28px 6px 0 0;border:2px solid var(--black);box-shadow:var(--hard);background:var(--char)}
+.hero img{width:100%;height:100%;object-fit:cover;object-position:center 25%;filter:grayscale(1) contrast(1.05);transition:filter .5s,transform 6s ease-out}
+.hero:hover img{filter:none;transform:scale(1.04)}
+.hero i{position:absolute;left:0;bottom:0;background:var(--red);color:#fff;font:700 11px/1 var(--f-mono);font-style:normal;text-transform:uppercase;letter-spacing:.12em;padding:8px 14px}
+.hero+.banner{margin-top:34px}
+@media(hover:none){.hero img{filter:none}}
