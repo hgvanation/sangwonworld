@@ -26,7 +26,9 @@ SW.renderHeader = () => {
       <button class="btn ghost" id="lang">🌐 ${SW.lang.toUpperCase()}</button>
       ${SW.user?`<button class="btn ghost" id="out">${SW.esc(SW.user.name)}${SW.isAdmin()?' ★':''} · ${SW.ui_('signout')}</button>`:''}
       <button class="btn ghost burger" id="bg">☰</button>
-    </div></div>${ticker}`;
+    </div></div>`;
+  let tkr=document.getElementById('tkr'); if(!tkr){ tkr=document.createElement('div'); tkr.id='tkr'; document.getElementById('hdr').after(tkr); }
+  tkr.innerHTML=ticker;   // dải chữ chạy nằm dưới header, cuộn đi cùng trang
   const $=id=>document.getElementById(id);
   $('lang').onclick=()=>{const i=SW.langs.indexOf(SW.lang);SW.lang=SW.langs[(i+1)%SW.langs.length];localStorage.setItem('sw_lang',SW.lang);document.documentElement.lang=SW.lang;SW.renderHeader();SW.render(1);};
   if($('out'))$('out').onclick=SW.signOut;   // khách không có nút đăng nhập; admin vào bằng link 'Admin' ở chân trang
