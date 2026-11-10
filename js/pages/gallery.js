@@ -37,8 +37,8 @@ SW.galDraw = () => {
   ctl.querySelectorAll('[data-era]').forEach(b=>b.onclick=()=>{ f.era=b.dataset.era; SW.galReset(); });
   ctl.querySelector('#gy').onchange=e=>{ f.year=e.target.value; SW.galReset(); };
   const q=SW.gq.toLowerCase(), list=g.items.filter(p=>!q||((p.title||'')+' '+(p.content||'')+' '+(p.tags||[]).join(' ')).toLowerCase().includes(q));
-  gr.innerHTML = (g.err ? `<div class="empty">⚠️ ${esc(g.err)}</div>` : list.length ? `<p class="muted" style="margin-bottom:12px">${list.length}</p><div class="masonry">${list.map(p=>`<figure data-id="${p.id}"><img src="${SW.thumb(p.url,480)}" alt="${esc(p.title)}" loading="lazy"><figcaption>${esc(p.title||'')}${p.content?`<br><span class="muted">${esc(p.content.slice(0,70))}${p.content.length>70?'…':''}</span>`:''}</figcaption></figure>`).join('')}</div>` : (g.loading?'<div class="empty">…</div>':SW.empty()))
-    + (g.done||g.err||!g.items.length ? '' : `<p style="text-align:center;margin-top:16px"><button class="btn ghost" id="gmore">${g.loading?'…':'Tải thêm'}</button></p>`);
+  gr.innerHTML = (g.err ? `<div class="empty">⚠️ ${esc(g.err)}</div>` : list.length ? `<p class="count"><b>${String(list.length).padStart(2,"0")}</b></p><div class="masonry">${list.map(p=>`<figure data-id="${p.id}"><img src="${SW.thumb(p.url,480)}" alt="${esc(p.title)}" loading="lazy"><figcaption>${esc(p.title||'')}${p.content?`<br><span class="muted">${esc(p.content.slice(0,70))}${p.content.length>70?'…':''}</span>`:''}</figcaption></figure>`).join('')}</div>` : (g.loading?'<div class="empty">…</div>':SW.empty()))
+    + (g.done||g.err||!g.items.length ? '' : `<p style="text-align:center;margin-top:16px"><button class="btn ghost" id="gmore">${g.loading?'…':SW.ui_('more')}</button></p>`);
   gr.querySelectorAll('figure').forEach(fg=>fg.onclick=()=>SW.galOpen(fg.dataset.id));
   const m=gr.querySelector('#gmore'); if(m) m.onclick=()=>SW.galLoad(true);
 };
@@ -52,7 +52,7 @@ SW.galOpen = (id) => {
     <h3>${esc(p.title||'')}</h3>${p.content?`<p style="white-space:pre-wrap">${esc(p.content)}</p>`:''}
     <div>${crumbs?`<span class="pill">${esc(crumbs)}</span>`:''}${era?`<span class="pill">${esc(era)}</span>`:''}${p.year?`<span class="pill">${p.year}</span>`:''}${(p.tags||[]).map(t=>`<span class="pill">#${esc(t)}</span>`).join('')}</div>
     ${(p.source||p.credit)?`<p class="muted" style="font-size:13px">${esc(p.source||'')} ${p.credit?'· '+esc(p.credit):''}</p>`:''}
-    <div class="adm-row"><a class="btn" href="${SW.dlUrl(p.url)}" download>⬇ Tải ảnh gốc</a><button class="btn ghost" id="lbx">✕</button>
+    <div class="adm-row"><a class="btn" href="${SW.dlUrl(p.url)}" download>⬇ ${SW.ui_('download')}</a><button class="btn ghost" id="lbx">✕</button>
     ${SW.isAdmin()?`<button class="btn ghost" id="lbe">✏️ Sửa</button><button class="btn ghost" id="lbd">🗑 Xoá</button>`:''}</div></div>`;
   el.classList.add('show');
   el.querySelector('#lbx').onclick=()=>el.classList.remove('show');
@@ -71,7 +71,7 @@ SW.pages.gallery = (cat) => {
     const q=document.getElementById('gq'); if(q) q.oninput=()=>{ SW.gq=q.value; SW.galDraw(); };
     if(SW.gal.sig!==SW.galSig()) SW.galReset(); else SW.galDraw();
   });
-  return `<div class="wrap"><h1>${SW.esc(SW.t(node.label))}</h1><br>${SW.tabs('about/gallery',node.subs,cat)}
+  return `<div class="wrap">${SW.ph(SW.t(node.label))}${SW.tabs('about/gallery',node.subs,cat)}
   <input id="gq" class="search" placeholder="${SW.ui_('search')}" value="${SW.esc(SW.gq)}">
   <div id="gal-ctl"></div><div id="gal-grid"></div></div>`;
 };
