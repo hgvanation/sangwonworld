@@ -1,0 +1,75 @@
+/* ===== EFFECTS: hiệu ứng di chuột + chạm. Nạp SAU components.css. Logic JS ở js/effects.js =====
+   Quy tắc: hiệu ứng :hover chỉ chạy trên thiết bị có chuột (@media hover:hover) để điện thoại không bị "kẹt hover";
+   điện thoại dùng :active (nhấn) + ripple/sparkle do effects.js tạo. */
+
+/* ---------- Lớp hạt lấp lánh (JS tạo) ---------- */
+.fx-layer{position:fixed;inset:0;pointer-events:none;z-index:200;overflow:hidden}
+.fx-s{position:absolute;width:var(--sz);height:var(--sz);margin:calc(var(--sz)/-2) 0 0 calc(var(--sz)/-2);background:var(--c);
+  clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);
+  animation:fxS var(--d) cubic-bezier(.2,.7,.3,1) forwards;will-change:transform,opacity}
+@keyframes fxS{0%{opacity:1;transform:translate(0,0) scale(1) rotate(0)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2) rotate(140deg)}}
+.fx-r{position:absolute;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;border:2px solid var(--accent2);animation:fxR .6s ease-out forwards}
+@keyframes fxR{0%{opacity:.9;transform:scale(.4)}100%{opacity:0;transform:scale(5)}}
+
+/* ---------- Nhấn (chạm màn hình) ---------- */
+.btn,.chip,.tabs a,.nav>li>a,.dd a,.quest,.masonry figure,.banner .arr{-webkit-tap-highlight-color:transparent;transition:transform .15s,background .2s,border-color .2s,color .2s,box-shadow .2s}
+.btn:active,.chip:active,.tabs a:active{transform:scale(.95)}
+.card.link:active,.masonry figure:active{transform:scale(.97)}
+.banner .arr:active{transform:translateY(-50%) scale(.9)}
+.dd a:active,.nav>li>a:active{background:var(--soft)}
+
+/* ---------- Nút: ánh sáng quét ngang ---------- */
+.btn{position:relative;overflow:hidden}
+.btn::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,transparent 30%,#ffffff70 50%,transparent 70%);transform:translateX(-130%)}
+
+/* ---------- Lightbox / modal: hiện ra có chuyển động (đáp lại hành động của người dùng) ---------- */
+.lb.show img{animation:fxPop .3s cubic-bezier(.2,.8,.3,1)}
+#adm-modal .adm-box{animation:fxPop .25s cubic-bezier(.2,.8,.3,1)}
+@keyframes fxPop{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+.dd{animation:fxDd .2s ease-out}
+@keyframes fxDd{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+
+/* ---------- Chỉ thiết bị có chuột ---------- */
+@media(hover:hover) and (pointer:fine){
+  /* menu: gạch chân vàng mở rộng từ giữa */
+  .nav>li>a{position:relative}
+  .nav>li>a::before{content:"";position:absolute;left:14px;right:14px;bottom:6px;height:2px;background:var(--accent2);transform:scaleX(0);transition:transform .25s ease}
+  .nav>li>a:hover::before,.nav>li.open>a::before,.nav a.on::before{transform:scaleX(1)}
+  .dd a{transition:background .2s,padding-left .2s,color .2s}
+  .dd a:hover{padding-left:18px}
+
+  /* logo: vương miện nảy nhẹ */
+  .logo:hover::before{animation:fxCrown .7s ease}
+  @keyframes fxCrown{0%,100%{transform:none}30%{transform:translateY(-4px) rotate(-8deg)}60%{transform:translateY(0) rotate(6deg)}}
+
+  /* nút */
+  .btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(42,88,212,.28)}
+  .btn.ghost:hover{box-shadow:0 6px 16px rgba(42,88,212,.14)}
+  .btn:hover::after{transform:translateX(130%);transition:transform .7s ease}
+  .chip:hover,.tabs a:hover{transform:translateY(-1px)}
+
+  /* card: nghiêng 3D theo chuột + vệt sáng đi theo con trỏ (biến --rx --ry --mx --my do effects.js đặt) */
+  .card.link,[data-tilt]{position:relative;overflow:hidden;transform-style:preserve-3d;transition:transform .15s ease-out,border-color .2s,box-shadow .25s}
+  .card.link::before,[data-tilt]::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .25s;
+    background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),#ffffffcc,#c8a24a22 45%,transparent 70%)}
+  .card.link:hover,[data-tilt]:hover{transform:perspective(800px) translateY(-4px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));box-shadow:0 18px 38px rgba(31,64,150,.20);border-color:var(--accent2)}
+  .card.link:hover::before,[data-tilt]:hover::before{opacity:1}
+
+  /* gallery: ảnh phóng nhẹ + nâng khối */
+  .masonry figure img{transition:transform .6s cubic-bezier(.2,.7,.3,1)}
+  .masonry figure:hover{transform:translateY(-4px);box-shadow:0 16px 34px rgba(31,64,150,.20);border-color:var(--accent2)}
+  .masonry figure:hover img{transform:scale(1.06)}
+
+  /* banner: ảnh phóng chậm khi di chuột, mũi tên nảy lên */
+  .banner .s{transition:opacity .6s,transform 6s ease-out}
+  .banner:hover .s.on{transform:scale(1.05)}
+  .banner .arr:hover{transform:translateY(-50%) scale(1.1)}
+
+  /* ảnh hồ sơ + pill */
+  .profile img{transition:transform .4s cubic-bezier(.2,.7,.3,1),box-shadow .3s}
+  .profile img:hover{transform:scale(1.03) rotate(-1deg);box-shadow:0 0 0 1px var(--accent2),0 16px 34px rgba(31,64,150,.22)}
+  .pill{transition:transform .2s,background .2s}
+  .pill:hover{transform:translateY(-2px);background:#d7e5ff}
+  .row{transition:background .2s,padding-left .2s}
+  .row:hover{background:#ffffff99;padding-left:8px}
+}
