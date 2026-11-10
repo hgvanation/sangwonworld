@@ -63,5 +63,6 @@ SW.ui = {
   fan:{vi:'Bài đăng của fanbase',en:'Fanbase posts'}, notice:{vi:'Thông báo',en:'Notices'},
   all:{vi:'Tất cả',en:'All'}, search:{vi:'Tìm theo tên, tag…',en:'Search title, tag…'}, noresult:{vi:'Chưa có nội dung ở mục này.',en:'Nothing here yet.'},
   era:{vi:'Theo comeback / giai đoạn',en:'By comeback / era'}, type:{vi:'Loại',en:'Type'}, year:{vi:'Năm',en:'Year'},
+  more:{vi:'Tải thêm',en:'Load more'}, download:{vi:'Tải ảnh gốc',en:'Download original'},
   copy:{vi:'Sao chép',en:'Copy'}, copied:{vi:'Đã chép!',en:'Copied!'}, open:{vi:'Mở',en:'Open'},
 };
