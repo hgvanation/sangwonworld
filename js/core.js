@@ -46,3 +46,4 @@ SW.carousel = (slides) => {
     clearInterval(SW._cy); SW._cy=setInterval(()=>document.getElementById('bn')?go(i+1):clearInterval(SW._cy),5000); });
   return `<div class="banner" id="bn">${slides.map((b,k)=>`<a class="s ${k?'':'on'}" href="${b.link||'#'}" style="background-image:url('${b.img}')"><div class="cap"><h1>${SW.esc(SW.t(b.title))}</h1><p class="muted">${SW.esc(SW.t(b.sub))}</p></div></a>`).join('')}<button class="arr l">‹</button><button class="arr r">›</button></div>`;
 };
+SW.ph = (t) => `<header class="ph"><h1>${SW.esc(t)}</h1></header>`;   /* đầu trang kiểu tạp chí */
