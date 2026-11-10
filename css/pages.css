@@ -97,3 +97,19 @@ a.card{display:block}
 
 /* icon emoji trong dropdown: trắng đen cho hợp phong cách */
 .dd a span{filter:grayscale(1)}
+
+/* ===== SỬA LỖI CHE CHỮ =====
+   Tiếng Việt in hoa có dấu chồng cao (Ế, Ộ, Ữ…) nên line-height quá thấp làm dấu bị dòng trên che / cắt.
+   Khối này nằm CUỐI file để ghi đè. Cần chặt hơn thì tăng/giảm các số line-height ở đây. */
+h1,h2,h3{line-height:1.15}
+h1{line-height:1.08}
+h2{line-height:1.2;padding:.18em .45em .1em}
+.ph h1{line-height:1.12;padding-top:.06em}
+.cover span{line-height:1.05;padding-top:.1em}
+.cover{margin-bottom:calc(-1*clamp(.3rem,1.2vw,1rem))}      /* banner chỉ chạm nhẹ vào chân chữ bìa */
+.bigname{line-height:1.12}
+.banner .cap{max-width:94%}
+.banner .cap h1{font-size:clamp(1.3rem,4.2vw,3.2rem);line-height:1.15;padding:.1em .3em .06em}
+.banner .cap p{font-size:.85rem;line-height:1.4}
+@media(max-width:700px){.banner .cap h1{font-size:clamp(1.1rem,5.5vw,1.8rem)}}
+.has-adm footer{padding-bottom:100px}                         /* nút admin cố định góc dưới không đè lên chữ chân trang */
