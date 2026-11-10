@@ -42,6 +42,9 @@ SW.banners = [
   { img:'assets/img/08.jpg', title:{vi:'Bình chọn đang mở',en:'Voting is open'}, sub:{vi:'Xem hướng dẫn và app vote',en:'See guides and voting apps'}, link:'#/activity/voting/focus' },
 ];
 
+/* ẢNH NGẪU NHIÊN ĐẦU TRANG CHỦ — mỗi lần vào web hiện 1 ảnh trong danh sách. Thêm link ảnh vào đây (vd 'assets/img/05.jpg'). Để trống = không hiện. */
+SW.heroImages = [];
+
 /* BÀI ĐĂNG TRANG CHỦ — thêm bài mới lên đầu mảng */
 SW.updates = [   // Sangwon new update post
   { date:'2026-11-08', title:{vi:'(Mẫu) Sangwon đăng ảnh mới trên SNS',en:'(Sample) Sangwon posted new photos'}, img:'assets/img/07.jpg', link:'#/about/gallery/sns' },
