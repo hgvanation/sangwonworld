@@ -1,0 +1,14 @@
+// Dán vào Firebase Console → Firestore Database → Rules → Publish
+// THAY email admin ở hàm isAdmin() (có thể thêm nhiều email trong [ ]).
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null
+          && request.auth.token.email_verified == true
+          && request.auth.token.email in ['email-cua-ban@gmail.com'];
+    }
+    match /content/{doc} { allow read: if true; allow write: if isAdmin(); }   // nội dung trang + cây hạng mục
+    match /photos/{doc}  { allow read: if true; allow write: if isAdmin(); }   // mỗi ảnh = 1 document
+  }
+}
