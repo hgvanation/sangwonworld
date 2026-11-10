@@ -1,33 +1,43 @@
-/* ===== BASE: màu, font, layout. Chủ đề Hoàng tử hoàng gia — xanh hoàng gia + trắng + vàng gold. Đổi màu ở :root ===== */
+/* ===== BASE: Red / White / Black — editorial, high fashion, Rockstar Y2K =====
+   Đổi bảng màu ở :root. Tên biến cũ (--bg --panel --line --text --muted --accent --accent2) được giữ để JS/CSS cũ không vỡ. */
 :root{
-  --bg:#f5f8ff;        /* trắng xanh nhạt (nền trang) */
-  --panel:#ffffff;     /* nền card */
-  --soft:#e8f0ff;      /* xanh băng, dùng cho pill / hover */
-  --line:#d6e1f7;      /* viền */
-  --text:#14234b;      /* chữ chính: xanh navy */
-  --muted:#5b6a90;     /* chữ phụ */
-  --accent:#2a58d4;    /* xanh hoàng gia */
-  --on-accent:#fff;    /* chữ trên nền accent */
-  --accent2:#c8a24a;   /* vàng gold */
-  --navy:#0f1f4d;      /* xanh đậm: footer, lớp phủ */
-  --r:16px;
-  --shadow:0 8px 28px rgba(31,64,150,.10);
+  --red:#A60016;        /* Rockstar Red: nhận diện chính */
+  --red2:#D71920;       /* Bright Red: hover, điểm nhấn */
+  --burg:#65121D;       /* Burgundy: khu vực quảng bá, footer */
+  --white:#fff;
+  --warm:#F5F2ED;       /* nền trang */
+  --black:#111;
+  --char:#292929;
+  --gray:#E8E6E3;
+  --mid:#B7B7B7;
+
+  --bg:var(--warm);--panel:var(--white);--line:var(--black);--hair:#d9d4cc;
+  --text:var(--black);--muted:#6b6560;--accent:var(--red);--accent2:var(--red2);--on-accent:#fff;--soft:var(--gray);--navy:var(--black);
+  --r:0;--hard:6px 6px 0 var(--red);
+  --f-disp:"Barlow Condensed","Be Vietnam Pro",Impact,sans-serif;   /* tiêu đề: condensed, in hoa */
+  --f-serif:"Playfair Display",Georgia,serif;                      /* điểm nhấn editorial */
+  --f-mono:"Space Mono",ui-monospace,Consolas,monospace;           /* nhãn, metadata */
 }
 *{box-sizing:border-box;margin:0}
-body{background:radial-gradient(1100px 480px at 50% -140px,#dbe7ff,transparent 72%) no-repeat,var(--bg);color:var(--text);font:400 16px/1.6 "Be Vietnam Pro",system-ui,sans-serif}
-h1,h2,h3{font-family:"Playfair Display","Be Vietnam Pro",serif;line-height:1.2;color:var(--navy)}
-h1{font-size:clamp(2rem,5vw,3.4rem);font-weight:800}
-h2{font-size:1.6rem;font-weight:700;margin:0 0 16px}
-h2::after{content:"";display:block;width:44px;height:2px;background:var(--accent2);margin-top:8px}
-h3{font-size:1.1rem;font-weight:700}
+body{background:var(--bg);color:var(--text);font:400 16px/1.65 "Be Vietnam Pro",system-ui,sans-serif}
+::selection{background:var(--red);color:#fff}
+h1,h2,h3{font-family:var(--f-disp);text-transform:uppercase;line-height:.95;color:var(--black);letter-spacing:-.005em}
+h1{font-size:clamp(2.6rem,8vw,6rem);font-weight:800}
+h2{display:inline-block;font-size:clamp(1.6rem,3.4vw,2.4rem);font-weight:800;margin:0 0 22px;padding:.12em .4em .06em;background:var(--red);color:#fff;transform:rotate(-.8deg)}
+h3{font-size:1.35rem;font-weight:700;line-height:1.05}
+h4{font:700 12px var(--f-mono);text-transform:uppercase;letter-spacing:.08em;color:var(--red)}
 a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+:focus-visible{outline:3px solid var(--red2);outline-offset:2px}
 .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
-section{margin:44px 0}
+section{margin:56px 0}
 .muted{color:var(--muted)}
-.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
-.two{display:grid;gap:20px;grid-template-columns:1fr 1fr}
+.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.two{display:grid;gap:24px;grid-template-columns:1.35fr 1fr}      /* cột lệch nhau thay vì 1:1 */
 @media(max-width:800px){.two{grid-template-columns:1fr}}
-footer{background:var(--navy);border-top:3px solid var(--accent2);padding:28px 20px;text-align:center;color:#c9d6f5;font-size:14px;margin-top:60px}
-footer a{color:#fff}
+
+/* footer: burgundy + barcode */
+footer{position:relative;background:var(--burg);color:#f1d9dc;border-top:4px solid var(--black);padding:64px 20px 28px;text-align:center;font:400 12px/1.7 var(--f-mono);text-transform:uppercase;letter-spacing:.06em;margin-top:80px}
+footer::before{content:"";display:block;width:150px;height:38px;margin:0 auto 18px;opacity:.9;
+  background:repeating-linear-gradient(90deg,#fff 0 2px,transparent 2px 4px,#fff 4px 5px,transparent 5px 9px,#fff 9px 12px,transparent 12px 14px,#fff 14px 15px,transparent 15px 19px)}
+footer a{color:#fff;opacity:1!important}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
