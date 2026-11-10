@@ -1,39 +1,63 @@
-/* ===== EFFECTS (Red/White/Black): sao đỏ-đen theo chuột, chạm tạo vòng đỏ, nhấn thu nhỏ. Logic JS: js/effects.js ===== */
-.fx-layer{position:fixed;inset:0;pointer-events:none;z-index:200;overflow:hidden}
-.fx-s{position:absolute;width:var(--sz);height:var(--sz);margin:calc(var(--sz)/-2) 0 0 calc(var(--sz)/-2);background:var(--c);
-  clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);
-  animation:fxS var(--d) cubic-bezier(.2,.7,.3,1) forwards;will-change:transform,opacity}
-@keyframes fxS{0%{opacity:1;transform:translate(0,0) scale(1) rotate(0)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2) rotate(140deg)}}
-.fx-r{position:absolute;width:14px;height:14px;margin:-7px 0 0 -7px;border:2px solid var(--red2);animation:fxR .6s ease-out forwards}   /* vòng vuông, đúng ngôn ngữ khung chữ nhật */
-@keyframes fxR{0%{opacity:.9;transform:scale(.4) rotate(0)}100%{opacity:0;transform:scale(5) rotate(45deg)}}
+/* ===== EFFECTS: lấp lánh theo chuột, chạm/bấm tạo vòng sáng + sao, card nghiêng theo chuột =====
+   Dùng "event delegation" trên document nên vẫn chạy khi SW.render() vẽ lại trang.
+   Tắt hết hiệu ứng khi người dùng bật "giảm chuyển động" trong hệ điều hành.
+   Muốn chỉnh: đổi COLORS, TRAIL_MS (độ dày vệt sao), BURST (số sao khi chạm). */
+(function(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-/* nhấn (điện thoại) */
-.btn,.chip,.tabs a,.nav>li>a,.dd a,.quest,.masonry figure,.banner .arr{-webkit-tap-highlight-color:transparent}
-.btn:active,.chip:active,.tabs a:active{transform:scale(.95)}
-.card.link:active{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--red)}
-.masonry figure:active{transform:scale(.97)}
-.banner .arr:active{transform:translateY(-50%) scale(.92)}
+  const COLORS = ['#D71920','#A60016','#111111','#65121D'];   // đỏ – đen – burgundy
+  const TRAIL_MS = 45, BURST = 9, MAX = 60;
+  const rnd = (a,b) => a + Math.random()*(b-a);
 
-/* mở ra có chuyển động */
-.lb.show img{animation:fxPop .3s cubic-bezier(.2,.8,.3,1)}
-#adm-modal .adm-box{animation:fxPop .25s cubic-bezier(.2,.8,.3,1)}
-.dd{animation:fxDd .18s ease-out}
-@keyframes fxPop{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
-@keyframes fxDd{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+  const layer = document.createElement('div');
+  layer.className = 'fx-layer'; layer.setAttribute('aria-hidden','true');
+  document.body.appendChild(layer);
 
-/* chỉ thiết bị có chuột */
-@media(hover:hover) and (pointer:fine){
-  .nav>li>a{position:relative}
-  .nav>li>a::before{content:"";position:absolute;left:12px;right:12px;bottom:5px;height:3px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .25s}
-  .nav>li>a:hover::before,.nav>li.open>a::before{transform:scaleX(1)}
-  .nav a.on::before{background:#fff;transform:scaleX(1)}
-  .logo:hover b{transform:rotate(2deg) scale(1.06);transition:transform .2s}
-  .btn:hover{transform:translate(-2px,-2px);box-shadow:3px 3px 0 var(--black)}
-  .banner .s{transition:opacity .6s,transform 6s ease-out}
-  .banner:hover .s.on{transform:scale(1.05);filter:grayscale(0) contrast(1.05)}
-  .pill{transition:background .15s,color .15s}.pill:hover{background:var(--black);color:#fff}
-  .row{transition:padding-left .2s,box-shadow .2s}
-  .row:hover{padding-left:12px;box-shadow:inset 4px 0 0 var(--red)}
-}
-/* điện thoại: ảnh hiện màu luôn (không có hover để chuyển từ trắng đen) */
-@media(hover:none){.masonry figure img,.profile img{filter:none}.banner .s{filter:none}}
+  const spark = (x,y,o) => {
+    if(layer.childElementCount > MAX) return;
+    const s = document.createElement('i'); s.className = 'fx-s';
+    s.style.left = x+'px'; s.style.top = y+'px';
+    s.style.setProperty('--sz', rnd(o.min,o.max)+'px');
+    s.style.setProperty('--c', COLORS[(Math.random()*COLORS.length)|0]);
+    s.style.setProperty('--dx', o.dx+'px'); s.style.setProperty('--dy', o.dy+'px');
+    s.style.setProperty('--d', rnd(o.t0,o.t1)+'ms');
+    s.addEventListener('animationend', () => s.remove());
+    layer.appendChild(s);
+  };
+
+  /* Vệt sao theo chuột (chỉ chuột thật, không áp dụng cho cảm ứng) */
+  let last = 0;
+  const trail = e => {
+    const now = performance.now(); if(now-last < TRAIL_MS) return; last = now;
+    spark(e.clientX, e.clientY, {min:6, max:13, dx:rnd(-14,14), dy:rnd(10,30), t0:600, t1:900});
+  };
+
+  /* Chạm / bấm: 1 vòng sáng + vài ngôi sao toả ra */
+  const tap = e => {
+    const r = document.createElement('i'); r.className = 'fx-r';
+    r.style.left = e.clientX+'px'; r.style.top = e.clientY+'px';
+    r.addEventListener('animationend', () => r.remove()); layer.appendChild(r);
+    for(let k=0;k<BURST;k++){
+      const a = (k/BURST)*Math.PI*2 + rnd(-.25,.25), d = rnd(34,74);
+      spark(e.clientX, e.clientY, {min:7, max:15, dx:Math.cos(a)*d, dy:Math.sin(a)*d, t0:500, t1:800});
+    }
+  };
+
+  /* Card nghiêng 3D + vệt sáng theo con trỏ (CSS đọc --rx --ry --mx --my) */
+  let cur = null;
+  const clear = el => ['--rx','--ry','--mx','--my'].forEach(v => el.style.removeProperty(v));
+  const tilt = e => {
+    const el = e.target.closest ? e.target.closest('.card.link,[data-tilt]') : null;
+    if(cur && cur !== el) clear(cur);
+    cur = el;
+    if(!el) return;
+    const b = el.getBoundingClientRect(), px = (e.clientX-b.left)/b.width, py = (e.clientY-b.top)/b.height;
+    el.style.setProperty('--mx', px*100+'%'); el.style.setProperty('--my', py*100+'%');
+    el.style.setProperty('--ry', (px-.5)*8+'deg'); el.style.setProperty('--rx', (.5-py)*8+'deg');
+  };
+
+  addEventListener('pointermove', e => { if(e.pointerType !== 'mouse') return; trail(e); tilt(e); }, {passive:true});
+  addEventListener('pointerdown', tap, {passive:true});
+  document.addEventListener('pointerout', e => { if(!e.relatedTarget && cur){ clear(cur); cur = null; } });
+  document.addEventListener('touchstart', () => {}, {passive:true});   // bật :active trên iOS Safari
+})();
