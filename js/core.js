@@ -17,6 +17,8 @@ SW.renderHeader = () => {
     const dd = n.children ? `<div class="dd">${n.children.map(c=>`<a href="#/${n.id}/${c.id}"><span>${c.icon||''}</span>${SW.esc(SW.t(c.label))}</a>`).join('')}</div>` : '';
     return `<li><a href="#/${n.id}">${SW.esc(SW.t(n.label))}${n.children?'<span class="car">▾</span>':''}</a>${dd}</li>`;
   }).join('');
+  const tk = ['Sangwon World', ...SW.nav.map(n=>SW.t(n.label))].map(t=>`<span>${SW.esc(t)}</span>`).join('').repeat(8);
+  const ticker = `<div class="ticker" aria-hidden="true"><div class="tk">${tk}</div></div>`;
   document.getElementById('hdr').innerHTML = `<div class="top">
     <a class="logo" href="#/home">Sangwon <b>World</b></a>
     <ul class="nav" id="nav"><li><a href="#/home">Home</a></li>${items}</ul>
@@ -24,7 +26,7 @@ SW.renderHeader = () => {
       <button class="btn ghost" id="lang">🌐 ${SW.lang.toUpperCase()}</button>
       ${SW.user?`<button class="btn ghost" id="out">${SW.esc(SW.user.name)}${SW.isAdmin()?' ★':''} · ${SW.ui_('signout')}</button>`:''}
       <button class="btn ghost burger" id="bg">☰</button>
-    </div></div>`;
+    </div></div>${ticker}`;
   const $=id=>document.getElementById(id);
   $('lang').onclick=()=>{const i=SW.langs.indexOf(SW.lang);SW.lang=SW.langs[(i+1)%SW.langs.length];localStorage.setItem('sw_lang',SW.lang);document.documentElement.lang=SW.lang;SW.renderHeader();SW.render(1);};
   if($('out'))$('out').onclick=SW.signOut;   // khách không có nút đăng nhập; admin vào bằng link 'Admin' ở chân trang
